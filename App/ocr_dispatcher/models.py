@@ -3,7 +3,7 @@ from django.db import models
 class OcrRequest(models.Model):
     name = models.CharField(max_length=50)
     timestamp_created = models.DateTimeField(auto_now_add=True, blank=True)
-    timestamp_finished = models.DateTimeField(blank=True)
+    timestamp_finished = models.DateTimeField(blank=True, null=True)
 
     def __repr__(self):
         return '<OcrRequest(id={self.id} name={self.name!r})>'.format(self=self)
