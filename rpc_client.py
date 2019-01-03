@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import json
-
 import pika
 import uuid
 
@@ -11,26 +10,18 @@ class FibonacciRpcClient(object):
 
         self.channel = self.connection.channel()
 
-        result = self.channel.queue_declare(exclusive=True)
-        self.callback_queue = result.method.queue
+        self.task_queue = self.channel.queue_declare('rpc_task_queue')
+        self.task_response = self.channel.queue_declare('rpc_response_queue')
 
-        self.channel.basic_consume(self.on_response, no_ack=True,
-                                   queue=self.callback_queue)
-
-    def on_response(self, ch, method, props, body):
-        print("On response")
-        if self.corr_id == props.correlation_id:
-            self.response = body
 
     def call(self, n):
         self.response = None
         self.corr_id = str(uuid.uuid4())
-        self.body = json.dumps({'number': 1, 'path': '/very/long/path', 'type': 'electricity'})
-
+        self.body = json.dumps({"number": n, "path": "/very/long/path", "type": "electricity"})
         self.channel.basic_publish(exchange='',
-                                   routing_key='rpc_queue',
+                                   routing_key=self.task_queue.method.queue,
                                    properties=pika.BasicProperties(
-                                       reply_to=self.callback_queue,
+                                       reply_to=self.task_response.method.queue,
                                        correlation_id=self.corr_id,
                                    ),
                                    body=str(self.body)
@@ -41,7 +32,4 @@ class FibonacciRpcClient(object):
 
 
 fibonacci_rpc = FibonacciRpcClient()
-
-print(" [x] Requesting fib(30)")
-response = fibonacci_rpc.call(30)
-print(" [.] Got %r" % response)
+fibonacci_rpc.call(30)
