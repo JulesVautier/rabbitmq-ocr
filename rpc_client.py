@@ -4,15 +4,14 @@ import pika
 import uuid
 
 
-class FibonacciRpcClient(object):
+class ClientRpc(object):
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
         self.channel = self.connection.channel()
 
-        self.task_queue = self.channel.queue_declare('rpc_task_queue')
-        self.task_response = self.channel.queue_declare('rpc_response_queue')
-
+        self.task_queue = self.channel.queue_declare('rpc_task_queue', durable=True)
+        self.task_response = self.channel.queue_declare('rpc_response_queue', durable=True)
 
     def call(self, n):
         self.response = None
@@ -23,13 +22,11 @@ class FibonacciRpcClient(object):
                                    properties=pika.BasicProperties(
                                        reply_to=self.task_response.method.queue,
                                        correlation_id=self.corr_id,
+                                       delivery_mode=2
                                    ),
                                    body=str(self.body)
                                    )
-        while self.response is None:
-            self.connection.process_data_events()
-        return self.response
 
 
-fibonacci_rpc = FibonacciRpcClient()
-fibonacci_rpc.call(30)
+client_rpc = ClientRpc()
+client_rpc.call(30)

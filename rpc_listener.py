@@ -9,10 +9,9 @@ class ListenerRpc(object):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
 
         self.channel = self.connection.channel()
-        self.task_response = self.channel.queue_declare('rpc_response_queue')
-
-        self.channel.basic_consume(self.on_response, no_ack=True,
-                                   queue=self.task_response.method.queue)
+        self.channel.basic_qos(prefetch_count=1)
+        self.task_response = self.channel.queue_declare('rpc_response_queue', durable=True)
+        self.channel.basic_consume(self.on_response, queue=self.task_response.method.queue, no_ack=True)
 
     def on_response(self, ch, method, props, body):
         print("On listenner")
