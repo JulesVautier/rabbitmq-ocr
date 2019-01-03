@@ -27,5 +27,3 @@ class ClientRpc(object):
                                    )
 
 
-client_rpc = ClientRpc()
-client_rpc.call(30)
