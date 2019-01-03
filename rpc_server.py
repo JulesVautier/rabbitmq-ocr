@@ -16,21 +16,13 @@ class WorkerRpc(object):
         self.channel.basic_consume(self.on_request, queue=self.task_queue.method.queue)
 
 
-    def compute(self, n):
-        if n == 0:
-            return 0
-        elif n == 1:
-            return 1
-        else:
-            return self.compute(n - 1) + self.compute(n - 2)
+    def compute(self, request):
+        return request
 
 
     def on_request(self, ch, method, props, body):
-        print('recieved : ', body)
-        body = json.loads(body)
-        n = int(body['number'])
-        body['number'] = self.compute(n)
-        response = body
+        request = json.loads(body)
+        response = self.compute(request)
 
         ch.basic_publish(exchange='',
                          routing_key=props.reply_to,
@@ -39,7 +31,6 @@ class WorkerRpc(object):
                              delivery_mode=2),
                          body=str(response))
         ch.basic_ack(delivery_tag=method.delivery_tag)
-        print('finished')
 
 
     def start(self):

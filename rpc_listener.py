@@ -14,11 +14,11 @@ class ListenerRpc(object):
         self.channel.basic_consume(self.on_response, queue=self.task_response.method.queue, no_ack=True)
 
     def on_response(self, ch, method, props, body):
-        print("On listenner")
         self.response = body
         print('response : ',  self.response)
 
     def start(self):
+        print(' [x] Waiting for responses from workers')
         self.channel.start_consuming()
 
 

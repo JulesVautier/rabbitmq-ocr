@@ -14,7 +14,6 @@ class ClientRpc(object):
         self.task_response = self.channel.queue_declare('rpc_response_queue', durable=True)
 
     def call(self, n):
-        self.response = None
         self.corr_id = str(uuid.uuid4())
         self.body = json.dumps({"number": n, "path": "/very/long/path", "type": "electricity"})
         self.channel.basic_publish(exchange='',
