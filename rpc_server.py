@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import json
+
 import pika
 import time
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
@@ -19,10 +21,14 @@ def fib(n):
     #     return fib(n-1) + fib(n-2)
 
 def on_request(ch, method, props, body):
-    n = int(body)
+    body = json.loads(body)
+    print (body)
+    n = int(body['number'])
 
     print(" [.] fib(%s)" % n)
-    response = fib(n)
+    body['nyumber'] = fib(n)
+
+    response = body
 
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
