@@ -14,5 +14,10 @@ def ocr(request):
     req.save()
 
     res = OcrRequest.objects.all()
-    print(res)
-    return HttpResponse(str(res))
+    view = ""
+    for request in res:
+        view = view + str(request.__repr__()) + '<br>'
+
+    print(view)
+
+    return HttpResponse(view)
