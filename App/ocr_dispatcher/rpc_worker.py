@@ -17,19 +17,20 @@ class WorkerRpc(object):
 
 
     def compute(self, request):
+        print(request['number'])
         return request
 
 
     def on_request(self, ch, method, props, body):
         request = json.loads(body)
-        response = self.compute(request)
+        response = json.dumps(self.compute(request))
 
         ch.basic_publish(exchange='',
                          routing_key=props.reply_to,
                          properties=pika.BasicProperties(
                              correlation_id=props.correlation_id,
                              delivery_mode=2),
-                         body=str(response))
+                         body=response)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

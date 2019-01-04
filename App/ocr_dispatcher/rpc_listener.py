@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 import json
+from time import sleep
 
 import pika
 import threading
+
+from .models import OcrResult
+
 
 class ListenerRpc(threading.Thread):
     def __init__(self):
@@ -15,14 +19,13 @@ class ListenerRpc(threading.Thread):
 
 
     def on_response(self, ch, method, props, body):
-        self.response = body
+        self.response = json.loads(body)
         print('response : ',  self.response)
+        ocr_result = OcrResult(result='hello hello hello', ocr_request_id=self.response['ocr_request_id'])
+        ocr_result.save()
 
     def run(self):
         print(' [x] Waiting for responses from workers')
         self.channel.start_consuming()
 
-
-listener_rpc = ListenerRpc()
-listener_rpc.run()
 

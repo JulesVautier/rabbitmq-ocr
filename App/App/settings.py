@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'background_task',
     'ocr_dispatcher.apps.OcrDispatcherConfig',
     'django.contrib.admin',
     'django.contrib.auth',

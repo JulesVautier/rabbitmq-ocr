@@ -8,10 +8,12 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def ocr(request):
-    client_rpc = ClientRpc()
-    client_rpc.call(30)
     req = OcrRequest(name='issou')
     req.save()
+    print(req.id)
+    print(req)
+    client_rpc = ClientRpc()
+    client_rpc.call(req.id)
 
     res = OcrRequest.objects.all()
     view = ""

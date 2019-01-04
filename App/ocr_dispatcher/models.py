@@ -12,9 +12,25 @@ class OcrRequest(models.Model):
     class Meta:
         db_table = 'ocr_request'
 
+
+class File(models.Model):
+    name = models.TextField(default='test_file')
+    path = models.TextField(default='very/long/path')
+    type = models.CharField(max_length=20, default='pdf')
+    syndic_id = models.IntegerField(default=1)
+    copro_id = models.IntegerField(default=1)
+
+    class Meta:
+        db_table = 'file'
+
+
 class OcrResult(models.Model):
+    ocr_request = models.ForeignKey(OcrRequest, on_delete=models.CASCADE)
     result = models.TextField()
-    ocr_request_id = models.ForeignKey(OcrRequest, on_delete=models.CASCADE)
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    syndic_id = models.IntegerField(default=1)
+    copro_id = models.IntegerField(default=1)
 
     class Meta:
         db_table = 'ocr_result'
+

@@ -15,7 +15,7 @@ class ClientRpc(object):
 
     def call(self, n):
         self.corr_id = str(uuid.uuid4())
-        self.body = json.dumps({"number": n, "path": "/very/long/path", "type": "electricity"})
+        self.body = json.dumps({"ocr_request_id": n, "number": n, "path": "/very/long/path", "type": "electricity"})
         self.channel.basic_publish(exchange='',
                                    routing_key=self.task_queue.method.queue,
                                    properties=pika.BasicProperties(
