@@ -10,10 +10,8 @@ def index(request):
 def ocr(request):
     req = OcrRequest(name='issou')
     req.save()
-    print(req.id)
-    print(req)
     client_rpc = ClientRpc()
-    client_rpc.call(req.id)
+    client_rpc.call(req.id, '/tmp/file.pdf')
 
     res = OcrRequest.objects.all()
     view = ""

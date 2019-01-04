@@ -6,6 +6,8 @@ from time import sleep
 import pika
 import threading
 
+from django.core import serializers
+
 from .models import OcrResult
 
 
@@ -20,10 +22,10 @@ class ListenerRpc(threading.Thread):
 
 
     def on_response(self, ch, method, props, body):
-        self.response = json.loads(body)
-        print('response : ',  self.response)
-        ocr_result = OcrResult(result='hello hello hello', ocr_request_id=self.response['ocr_request_id'])
-        ocr_result.save()
+        ocr_result = json.loads(body)
+        print("____ on response", ocr_result)
+        print('response : ', ocr_result)
+        #ocr_result.save()
 
     def run(self):
         print(' [x] Waiting for responses from workers')
