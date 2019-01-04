@@ -26,9 +26,7 @@ class ClientRpc(object):
         ocr_result.save()
 
         serialized_ocr_result = OcrResultSerializer(ocr_result)
-        print(serialized_ocr_result.data)
         data = json.dumps(serialized_ocr_result.data)
-        print(data)
 
         self.body = data
         self.channel.basic_publish(exchange='',

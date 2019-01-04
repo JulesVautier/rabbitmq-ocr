@@ -18,6 +18,4 @@ def ocr(request):
     for request in res:
         view = view + str(request.__repr__()) + '<br>'
 
-    print(view)
-
     return HttpResponse(view)

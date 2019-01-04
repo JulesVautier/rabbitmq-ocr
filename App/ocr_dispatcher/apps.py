@@ -12,14 +12,6 @@ class OcrDispatcherConfig(AppConfig):
         if 'runserver' not in sys.argv:
             return True
 
-        # from .rpc_client import ClientRpc
-        # from .models import OcrRequest
-        #
-        # req = OcrRequest(name='issou')
-        # req.save()
-        # client_rpc = ClientRpc()
-        # client_rpc.call(req.id, '1')
-
         from .rpc_listener import ListenerRpc
 
         listener = ListenerRpc()

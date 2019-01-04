@@ -23,13 +23,9 @@ class WorkerRpc(object):
 
 
     def on_request(self, ch, method, props, body):
-        print(body)
         body = body.decode()
-        print(body)
         request = json.loads(body)
         response = json.dumps(self.compute(request))
-        print(response)
-
         ch.basic_publish(exchange='',
                          routing_key=props.reply_to,
                          properties=pika.BasicProperties(

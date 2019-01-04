@@ -46,11 +46,9 @@ class OcrResultSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        print('create')
         return OcrResult(**validated_data)
 
     def update(self, instance, validated_data):
-        print('update')
         instance.status = validated_data.get('status', instance.status)
         instance.save()
         return instance

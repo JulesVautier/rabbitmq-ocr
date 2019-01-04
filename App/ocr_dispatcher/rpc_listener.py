@@ -24,13 +24,9 @@ class ListenerRpc(threading.Thread):
 
     def on_response(self, ch, method, props, body):
         body = json.loads(body.decode())
-        body['status'] = 'DONE'
         serializer_ocr_result = OcrResultSerializer(data=body)
-        print("____ on response", body)
         if serializer_ocr_result.is_valid():
             OcrResult.objects.filter(pk=body['id']).update(status='DONE')
-        # print(serializer_ocr_result.validated_data)
-        # serializer_ocr_result.save()
 
     def run(self):
         print(' [x] Waiting for responses from workers')
