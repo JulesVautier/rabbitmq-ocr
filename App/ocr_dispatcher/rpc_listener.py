@@ -19,7 +19,7 @@ class ListenerRpc(threading.Thread):
         self.channel.basic_qos(prefetch_count=1)
         self.task_response = self.channel.queue_declare('rpc_response_queue', durable=True)
         self.channel.basic_consume(self.on_response, queue=self.task_response.method.queue, no_ack=True)
-        self.daemon = False
+        self.daemon = True
 
 
     def on_response(self, ch, method, props, body):
