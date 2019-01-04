@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import io
 import json
 
 import pika
@@ -22,6 +23,9 @@ class WorkerRpc(object):
 
 
     def on_request(self, ch, method, props, body):
+        print(body)
+        body = body.decode()
+        print(body)
         request = json.loads(body)
         response = json.dumps(self.compute(request))
         print(response)
@@ -31,7 +35,7 @@ class WorkerRpc(object):
                          properties=pika.BasicProperties(
                              correlation_id=props.correlation_id,
                              delivery_mode=2),
-                         body=response)
+                         body=str(response))
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

@@ -19,20 +19,19 @@ class ListenerRpc(threading.Thread):
         self.channel.basic_qos(prefetch_count=1)
         self.task_response = self.channel.queue_declare('rpc_response_queue', durable=True)
         self.channel.basic_consume(self.on_response, queue=self.task_response.method.queue, no_ack=True)
+        self.daemon = False
 
 
     def on_response(self, ch, method, props, body):
-        body = json.loads(body)
+        body = json.loads(body.decode())
+        body['status'] = 'DONE'
         serializer_ocr_result = OcrResultSerializer(data=body)
         print("____ on response", body)
-        print (serializer_ocr_result.is_valid())
-        print (serializer_ocr_result.validated_data)
-        serializer_ocr_result.save()
+        if serializer_ocr_result.is_valid():
+            OcrResult.objects.filter(pk=body['id']).update(status='DONE')
+        # print(serializer_ocr_result.validated_data)
+        # serializer_ocr_result.save()
 
     def run(self):
         print(' [x] Waiting for responses from workers')
         self.channel.start_consuming()
-
-listener = ListenerRpc()
-listener.start()
-

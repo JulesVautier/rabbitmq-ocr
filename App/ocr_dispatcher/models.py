@@ -10,7 +10,7 @@ class OcrRequest(models.Model):
 
 
     def __repr__(self):
-        return 'OcrRequest(id={self.id} name={self.name!r}) Status={self.status}'.format(self=self)
+        return 'OcrRequest(id={self.id} name={self.name!r}) status={self.status}'.format(self=self)
 
     class Meta:
         db_table = 'ocr_request'
@@ -33,6 +33,8 @@ class OcrResult(models.Model):
     file = models.ForeignKey(File, on_delete=models.CASCADE)
     syndic_id = models.IntegerField(default=1)
     copro_id = models.IntegerField(default=1)
+    status = models.CharField(max_length=30, default='WAITING')
+
 
     class Meta:
         db_table = 'ocr_result'
@@ -44,5 +46,11 @@ class OcrResultSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        print('create')
         return OcrResult(**validated_data)
 
+    def update(self, instance, validated_data):
+        print('update')
+        instance.status = validated_data.get('status', instance.status)
+        instance.save()
+        return instance

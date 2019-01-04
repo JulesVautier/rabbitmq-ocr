@@ -27,18 +27,10 @@ class ClientRpc(object):
 
         serialized_ocr_result = OcrResultSerializer(ocr_result)
         print(serialized_ocr_result.data)
-        data = JSONRenderer().render(serialized_ocr_result.data)
+        data = json.dumps(serialized_ocr_result.data)
         print(data)
 
-        import io
-        stream = io.BytesIO(data)
-        data = JSONParser().parse(stream)
-        print(data)
-
-        serialized_ocr_result = OcrResultSerializer(data=data)
-        print(serialized_ocr_result.is_valid())
-        print(serialized_ocr_result.validated_data)
-        self.body = json.dumps(serialized_ocr_result.data)
+        self.body = data
         self.channel.basic_publish(exchange='',
                                    routing_key=self.task_queue.method.queue,
                                    properties=pika.BasicProperties(
