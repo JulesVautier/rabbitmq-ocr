@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from django.db import models
 
 class OcrRequest(models.Model):
@@ -35,4 +36,13 @@ class OcrResult(models.Model):
 
     class Meta:
         db_table = 'ocr_result'
+
+
+class OcrResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OcrResult
+        fields = '__all__'
+
+    def create(self, validated_data):
+        return OcrResult(**validated_data)
 

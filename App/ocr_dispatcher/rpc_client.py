@@ -4,8 +4,11 @@ import pika
 import uuid
 
 from django.core import serializers
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
 
-from .models import OcrResult
+from .models import OcrResult, OcrResultSerializer
+
 
 class ClientRpc(object):
     def __init__(self):
@@ -18,10 +21,24 @@ class ClientRpc(object):
 
     def call(self, ocr_request: int, file: str):
         self.corr_id = str(uuid.uuid4())
+
         ocr_result = OcrResult(ocr_request_id=ocr_request, file_id=file)
-        data = json.dumps(ocr_result)
-        self.body = data
-        print(self.body)
+        ocr_result.save()
+
+        serialized_ocr_result = OcrResultSerializer(ocr_result)
+        print(serialized_ocr_result.data)
+        data = JSONRenderer().render(serialized_ocr_result.data)
+        print(data)
+
+        import io
+        stream = io.BytesIO(data)
+        data = JSONParser().parse(stream)
+        print(data)
+
+        serialized_ocr_result = OcrResultSerializer(data=data)
+        print(serialized_ocr_result.is_valid())
+        print(serialized_ocr_result.validated_data)
+        self.body = json.dumps(serialized_ocr_result.data)
         self.channel.basic_publish(exchange='',
                                    routing_key=self.task_queue.method.queue,
                                    properties=pika.BasicProperties(

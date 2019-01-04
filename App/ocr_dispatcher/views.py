@@ -11,7 +11,7 @@ def ocr(request):
     req = OcrRequest(name='issou')
     req.save()
     client_rpc = ClientRpc()
-    client_rpc.call(req.id, '/tmp/file.pdf')
+    client_rpc.call(req.id, '1')
 
     res = OcrRequest.objects.all()
     view = ""

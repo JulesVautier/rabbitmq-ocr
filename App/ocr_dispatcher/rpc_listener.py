@@ -8,7 +8,7 @@ import threading
 
 from django.core import serializers
 
-from .models import OcrResult
+from .models import OcrResult, OcrResultSerializer
 
 
 class ListenerRpc(threading.Thread):
@@ -22,12 +22,17 @@ class ListenerRpc(threading.Thread):
 
 
     def on_response(self, ch, method, props, body):
-        ocr_result = json.loads(body)
-        print("____ on response", ocr_result)
-        print('response : ', ocr_result)
-        #ocr_result.save()
+        body = json.loads(body)
+        serializer_ocr_result = OcrResultSerializer(data=body)
+        print("____ on response", body)
+        print (serializer_ocr_result.is_valid())
+        print (serializer_ocr_result.validated_data)
+        serializer_ocr_result.save()
 
     def run(self):
         print(' [x] Waiting for responses from workers')
         self.channel.start_consuming()
+
+listener = ListenerRpc()
+listener.start()
 

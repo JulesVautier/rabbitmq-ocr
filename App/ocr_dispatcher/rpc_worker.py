@@ -17,14 +17,11 @@ class WorkerRpc(object):
 
 
     def compute(self, request):
-        print(request)
         request['result'] = 'worked on worker heh'
         return request
 
 
     def on_request(self, ch, method, props, body):
-        print(body)
-        print(type(body))
         request = json.loads(body)
         response = json.dumps(self.compute(request))
         print(response)
