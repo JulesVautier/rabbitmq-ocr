@@ -5,6 +5,8 @@ class OcrRequest(models.Model):
     timestamp_created = models.DateTimeField(auto_now_add=True, blank=True)
     timestamp_finished = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=30, default='WAITING')
+    number_files = models.IntegerField(default=1)
+
 
     def __repr__(self):
         return 'OcrRequest(id={self.id} name={self.name!r}) Status={self.status}'.format(self=self)

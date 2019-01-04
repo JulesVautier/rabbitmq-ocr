@@ -31,14 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'background_task',
-    'ocr_dispatcher.apps.OcrDispatcherConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ocr_dispatcher.apps.OcrDispatcherConfig',
 ]
 
 MIDDLEWARE = [

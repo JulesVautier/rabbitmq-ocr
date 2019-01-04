@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import json
+import os
 from time import sleep
 
 import pika
@@ -27,5 +28,4 @@ class ListenerRpc(threading.Thread):
     def run(self):
         print(' [x] Waiting for responses from workers')
         self.channel.start_consuming()
-
 
