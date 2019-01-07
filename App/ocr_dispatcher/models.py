@@ -16,27 +16,27 @@ class OcrRequest(models.Model):
         db_table = 'ocr_request'
 
 
-class File(models.Model):
-    name = models.TextField(default='test_file')
-    path = models.TextField(default='very/long/path')
+class Document(models.Model):
+    document = models.FileField(upload_to='documents/')
     type = models.CharField(max_length=20, default='pdf')
-    syndic_id = models.IntegerField(default=1)
-    copro_id = models.IntegerField(default=1)
+    syndic_id = models.IntegerField(blank=True, null=True)
+    copro_id = models.IntegerField(blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'file'
+        db_table = 'document'
 
 
-class Document(models.Model):
-    description = models.CharField(max_length=255, blank=True)
-    document = models.FileField(upload_to='documents/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+# class File(models.Model):
+#     description = models.CharField(max_length=255, blank=True)
+#     document = models.FileField(upload_to='documents/')
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 
 class OcrResult(models.Model):
     ocr_request = models.ForeignKey(OcrRequest, on_delete=models.CASCADE)
     result = models.TextField()
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    file = models.ForeignKey(Document, on_delete=models.CASCADE)
     status = models.CharField(max_length=30, default='WAITING')
 
 
