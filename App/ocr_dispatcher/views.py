@@ -50,6 +50,16 @@ def model_form_upload(request):
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            fs = FileSystemStorage()
+            for filename, file in request.FILES.items():
+                name = request.FILES[filename].name
+                filename = fs.save(name, file)
+                print(filename)
+            print(form)
+            print(request.FILES)
+            # fs = FileSystemStorage()
+            # filename = fs.save(myfile.name, myfile)
+            # uploaded_file_url = fs.url(filename)
             return redirect('home')
     else:
         form = DocumentForm()
