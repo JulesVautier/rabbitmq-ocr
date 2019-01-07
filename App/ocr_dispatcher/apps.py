@@ -4,7 +4,6 @@ import django
 from django.apps import AppConfig
 
 
-
 class OcrDispatcherConfig(AppConfig):
     name = 'ocr_dispatcher'
 
@@ -12,9 +11,7 @@ class OcrDispatcherConfig(AppConfig):
         if 'runserver' not in sys.argv:
             return True
 
-        # from .rpc_listener import ListenerRpc
-        #
-        # listener = ListenerRpc()
-        # listener.start()
+        from .rpc_listener import ListenerRpc
 
-        from .file_manager import DocumentManager
+        listener = ListenerRpc()
+        listener.start()

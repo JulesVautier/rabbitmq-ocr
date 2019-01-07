@@ -38,5 +38,3 @@ class ClientRpc(object):
                                    ),
                                    body=str(self.body)
                                    )
-
-

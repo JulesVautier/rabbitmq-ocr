@@ -21,7 +21,6 @@ class ListenerRpc(threading.Thread):
         self.channel.basic_consume(self.on_response, queue=self.task_response.method.queue, no_ack=True)
         self.daemon = True
 
-
     def on_response(self, ch, method, props, body):
         body = json.loads(body.decode())
         serializer_ocr = OcrResultSerializer(data=body)

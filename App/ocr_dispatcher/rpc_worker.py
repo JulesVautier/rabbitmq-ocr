@@ -16,11 +16,9 @@ class WorkerRpc(object):
         self.channel.basic_qos(prefetch_count=1)
         self.channel.basic_consume(self.on_request, queue=self.task_queue.method.queue)
 
-
     def compute(self, request):
         request['result'] = 'worked on worker heh'
         return request
-
 
     def on_request(self, ch, method, props, body):
         body = body.decode()
@@ -34,10 +32,10 @@ class WorkerRpc(object):
                          body=str(response))
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-
     def start(self):
         print(" [x] Awaiting RPC requests")
         self.channel.start_consuming()
+
 
 workder_rpc = WorkerRpc()
 workder_rpc.start()

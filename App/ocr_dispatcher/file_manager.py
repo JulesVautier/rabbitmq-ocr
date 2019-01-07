@@ -1,5 +1,5 @@
-
 ARCHIVE_EXTENSIONS = ('.zip', '.tar', '.tar.gz')
+
 
 class DocumentManager(object):
 
@@ -26,9 +26,9 @@ class DocumentManager(object):
     def save_documents(self):
         for file in self.files:
             print(file)
-            #TODO save in DB
-            #TODO save in google cloud
+            # TODO save in DB
+            # save in DB in tmp then in id/name
+            # TODO save in google cloud
             pass
         pass
-    #return array [ Documents ]
-
+    # return array [ Documents ]
