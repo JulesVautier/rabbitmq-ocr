@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('compute/', views.ocr, name='ocr')
+    path('compute/', views.ocr_view, name='ocr')
 ]
 

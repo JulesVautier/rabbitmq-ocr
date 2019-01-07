@@ -7,9 +7,12 @@ def index(request):
 
     return HttpResponse("Hello, world. You're at the polls index.")
 
-def ocr(request):
-    req = OcrRequest(name='issou')
+def ocr_view(request):
+    #TODO save files
+
+    req = OcrRequest(name='test')
     req.save()
+
     client_rpc = ClientRpc()
     client_rpc.call(req.id, '1')
 

@@ -31,8 +31,6 @@ class OcrResult(models.Model):
     ocr_request = models.ForeignKey(OcrRequest, on_delete=models.CASCADE)
     result = models.TextField()
     file = models.ForeignKey(File, on_delete=models.CASCADE)
-    syndic_id = models.IntegerField(default=1)
-    copro_id = models.IntegerField(default=1)
     status = models.CharField(max_length=30, default='WAITING')
 
 

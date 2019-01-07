@@ -12,7 +12,9 @@ class OcrDispatcherConfig(AppConfig):
         if 'runserver' not in sys.argv:
             return True
 
-        from .rpc_listener import ListenerRpc
+        # from .rpc_listener import ListenerRpc
+        #
+        # listener = ListenerRpc()
+        # listener.start()
 
-        listener = ListenerRpc()
-        listener.start()
+        from .file_manager import DocumentManager

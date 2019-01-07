@@ -24,8 +24,8 @@ class ListenerRpc(threading.Thread):
 
     def on_response(self, ch, method, props, body):
         body = json.loads(body.decode())
-        serializer_ocr_result = OcrResultSerializer(data=body)
-        if serializer_ocr_result.is_valid():
+        serializer_ocr = OcrResultSerializer(data=body)
+        if serializer_ocr.is_valid():
             OcrResult.objects.filter(pk=body['id']).update(status='DONE')
 
     def run(self):
