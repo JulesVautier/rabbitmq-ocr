@@ -1,5 +1,12 @@
-ARCHIVE_EXTENSIONS = ('.zip', '.tar', '.tar.gz')
+import datetime
+import os
+import time
+import zipfile
 
+from .models import Document
+
+ARCHIVE_EXTENSIONS = ('.zip')
+EXTRACTION_PATH = './tmp_dir/'
 
 class DocumentManager(object):
 
@@ -7,20 +14,32 @@ class DocumentManager(object):
         self.files = []
         pass
 
-    def archive_manager(self, archive: str):
 
-        pass
+# TODO CHECK NAME FUNCTION
 
-    def pdf_manager(self, file: str):
+    def archive_manager(self, file):
+        print('archive_manager ', file.name)
+        with zipfile.ZipFile(file, "r") as archive:
+            #Add date to the folder name to have an unique name
+            st = datetime.datetime.fromtimestamp(time.time()).strftime('_%Y-%m-%d-%H-%M-%S')
+            folder_name = file.name.split('.')[0] + str(st) + '/'
+            archive.extractall(EXTRACTION_PATH + folder_name)
+            return folder_name
+
+    def file_manager(self, file):
+        print('file_maneger', file)
         self.files.append(file)
+        doc = Document(document=file)
+        doc.save()
         pass
 
-    def open(self, file: str):
-        print(file)
-        if (file.endswith('.pdf')):
-            self.pdf_manager(file)
-        elif (file.endswith(ARCHIVE_EXTENSIONS)):
+    def open(self, file):
+        print('___________ open ', file.name)
+        file_name = file.name
+        if (file_name.endswith(ARCHIVE_EXTENSIONS)):
             self.archive_manager(file)
+        else:
+            self.file_manager(file)
         pass
 
     def save_documents(self):

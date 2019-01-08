@@ -39,13 +39,17 @@ def model_form_upload(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            print(form)
-            form.save()
-            fs = FileSystemStorage()
             for filename, file in request.FILES.items():
-                name = file.name
-                fs.save(file.name, file)
-            return redirect('home')
+                document_manager = DocumentManager()
+                document_manager.open(file)
+                print(document_manager.files)
+            # print(form)
+            # form.save()
+            # fs = FileSystemStorage()
+            # for filename, file in request.FILES.items():
+            #     name = file.name
+            #     fs.save(file.name, file)
+            # return redirect('home')
     else:
         form = DocumentForm()
     return render(request, 'model_form_upload.html', {
