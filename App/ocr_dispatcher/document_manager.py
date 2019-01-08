@@ -1,28 +1,23 @@
 import datetime
 import os
+import shutil
 import time
 import zipfile
 
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
 
-# from App.App import settings
 from .models import Document
-
-ARCHIVE_EXTENSIONS = ('.zip')
-EXTRACTION_PATH = './tmp_dir/'
 
 
 class DocumentManager(object):
 
     def __init__(self):
         self.files = []
-        self.archive_extensions = ARCHIVE_EXTENSIONS
-        self.extraction_path = EXTRACTION_PATH
+        self.archive_extensions = ('.zip')
+        self.extraction_path = './tmp_dir/'
         self.fs = FileSystemStorage()
         pass
-
-    # TODO CHECK NAME FUNCTION
 
     def archive_manager(self, file):
         print('archive_manager ', file.name)
@@ -34,40 +29,32 @@ class DocumentManager(object):
             return extract_dir
 
     def directory_manager(self, directory):
-        for root, dirs, files in os.walk(EXTRACTION_PATH + directory):
+        document_list = []
+        for root, dirs, files in os.walk(self.extraction_path + directory):
             path = root + '/'
             for file in files:
                 local_file = open(path + file, 'rb')
                 django_file = File(local_file)
-                self.file_manager(path + file, django_file)
-                # local_file.close()
-
+                document_list.append(self.file_manager(path + file, django_file))
+                local_file.close()
+        return document_list
 
     def file_manager(self, filename, django_file):
-        print('file_manager', filename)
-        doc = Document(name = os.path.basename(filename))
-        # doc.document.save(os.path.basename(filename), django_file)
+        doc = Document(name=os.path.basename(filename))
         doc.document.save('test', django_file)
         doc.save()
-        print('saved ', doc.document.name)
-        pass
+        return doc
 
     def open(self, file):
-        print('___________ open ', file.name)
-        file_name = file.name
-        if (file_name.endswith(ARCHIVE_EXTENSIONS)):
+        """ Open a django.File an return an array of models.Documents
+        The file can be a single file or a Zip archive.
+        The single file or all files from archives will be uploaded according to django settings
+        """
+        document_list = []
+        if (file.name.endswith(self.archive_extensions)):
             extract_dir = self.archive_manager(file)
-            self.directory_manager(extract_dir)
+            document_list = self.directory_manager(extract_dir)
+            shutil.rmtree(extract_dir)  # delete the temporary directory
         else:
-            self.file_manager(file.name, file)
-        pass
-
-    def save_documents(self):
-        for file in self.files:
-            print(file)
-            # TODO save in DB
-            # save in DB in tmp then in id/name
-            # TODO save in google cloud
-            pass
-        pass
-    # return array [ Documents ]
+            document_list.append(self.file_manager(file.name, file))
+        return document_list

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
-from .file_manager import DocumentManager
+from .document_manager import DocumentManager
 from .rpc_client import ClientRpc
 from .models import OcrRequest, OcrResult, Document
 from .forms import DocumentForm
