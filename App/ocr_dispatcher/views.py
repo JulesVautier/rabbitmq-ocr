@@ -42,7 +42,9 @@ def model_form_upload(request):
             document_manager = DocumentManager()
             for filename, file in request.FILES.items():
                 document_manager.save(file)
-                print(document_manager.document_list)
+
+                '../../../../../etc_passwd'
+
     else:
         form = DocumentForm()
     return render(request, 'model_form_upload.html', {

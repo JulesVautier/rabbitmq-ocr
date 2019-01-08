@@ -19,7 +19,7 @@ class DocumentManager(object):
 
     def __init__(self):
         self.archive_extensions = ('.zip')
-        self.extraction_path = './tmp_dir/'
+        self.extraction_path = '/tmp/tmp_dir/'
         self.fs = FileSystemStorage()
         self.document_list = []
         pass
@@ -35,7 +35,7 @@ class DocumentManager(object):
             document_list = self.directory_manager(extract_dir)
             shutil.rmtree(extract_dir)  # delete the temporary directory
         else:
-            document_list.append(self.file_manager(file.name, file))
+            document_list.append(self.file_manager(file))
         return document_list
 
     def archive_manager(self, file):
@@ -70,13 +70,7 @@ class DocumentManager(object):
         Create a models.Document
         """
         doc = Document(name=os.path.basename(django_file.name))
-        doc.document.save('test', django_file)
+        doc.document.save(os.path.basename(django_file.name), django_file)
         doc.save()
         self.document_list.append(doc)
         return doc
-
-    def get_all_documents_saved(self):
-        """
-        Get all the documents saved by this instance of DocumentManager
-        """
-        return self.document_list
