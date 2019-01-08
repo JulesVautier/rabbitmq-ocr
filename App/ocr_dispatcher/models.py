@@ -17,6 +17,7 @@ class OcrRequest(models.Model):
 
 
 class Document(models.Model):
+    name = models.CharField(max_length=1024)
     document = models.FileField(upload_to='documents/')
     type = models.CharField(max_length=20, default='pdf')
     syndic_id = models.IntegerField(blank=True, null=True)
