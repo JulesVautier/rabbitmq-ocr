@@ -9,7 +9,7 @@ __pycache__/
 .idea
 .idea/*
 media/
-
+tmp_dir/
 # Distribution / packaging
 .Python
 build/
