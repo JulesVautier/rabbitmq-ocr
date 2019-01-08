@@ -20,7 +20,6 @@ class DocumentManager(object):
     def __init__(self):
         self.archive_extensions = ('.zip')
         self.extraction_path = '/tmp/tmp_dir/'
-        self.fs = FileSystemStorage()
         self.document_list = []
         pass
 
